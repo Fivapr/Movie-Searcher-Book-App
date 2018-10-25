@@ -2,6 +2,8 @@ import dotenv from 'dotenv'
 import express from 'express'
 import next from 'next'
 import mongoose from 'mongoose'
+import session from 'express-session'
+import mongoSessionStore from 'connect-mongo'
 import User from './models/User'
 
 dotenv.config()
@@ -22,6 +24,24 @@ const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
   const server = express()
+  const MongoStore = mongoSessionStore(session)
+
+  const sessionOptions = {
+    name: 'MSbook.sid',
+    secret: 'HD2w.)q*VqRT4/#NK2M/,E^B)}FED5fWU!dKe[wk',
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      ttl: 14 * 24 * 60 * 60, // save session 14 days
+    }),
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      maxAge: 14 * 24 * 60 * 60 * 1000,
+    },
+  }
+
+  server.use(session(sessionOptions))
 
   server.get('/', async (req, res) => {
     const user = await User.findOne({ email: 'aintensifies@gmail.com' })
