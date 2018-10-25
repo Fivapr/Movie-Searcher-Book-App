@@ -1,18 +1,30 @@
+import dotenv from 'dotenv'
 import express from 'express'
 import next from 'next'
+import mongoose from 'mongoose'
+import User from './models/User'
+
+dotenv.config()
+
+const dev = process.env.NODE_ENV !== 'production'
+const MONGO_URL = process.env.MONGO_URL_TEST
+
+mongoose.connect(
+  MONGO_URL,
+  { useNewUrlParser: true },
+)
 
 const port = process.env.PORT || 8000
 const ROOT_URL = process.env.ROOT_URL || `http://localhost:${port}`
 
-const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
 app.prepare().then(() => {
   const server = express()
 
-  server.get('/', (req, res) => {
-    const user = { email: 'aintensifies@gmail.com' }
+  server.get('/', async (req, res) => {
+    const user = await User.findOne({ email: 'aintensifies@gmail.com' })
     app.render(req, res, '/', { user })
   })
 
