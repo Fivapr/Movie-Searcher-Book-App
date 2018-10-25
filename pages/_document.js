@@ -65,7 +65,6 @@ class MyDocument extends Document {
             font: '16px Comfortaa',
             color: '#222',
             margin: '0px auto',
-            // @ts-ignore
             fontWeight: '300',
             lineHeight: '1.5em',
             backgroundColor: '#F7F9FC',
@@ -83,7 +82,6 @@ MyDocument.getInitialProps = ({ renderPage }) => {
   const pageContext = getContext()
 
   const page = renderPage(Component => props => (
-    // @ts-ignore
     <JssProvider
       registry={pageContext.sheetsRegistry}
       generateClassName={pageContext.generateClassName}
