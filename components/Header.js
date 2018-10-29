@@ -12,7 +12,7 @@ import { styleToolbar } from './SharedStyles'
 const optionsMenu = [
   {
     text: 'Got question?',
-    href: 'https://github.com/builderbook/builderbook/issues',
+    href: 'https://2ch.hk/wrk/res/1393263.html',
   },
   {
     text: 'Log out',

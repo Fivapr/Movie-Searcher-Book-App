@@ -3,7 +3,7 @@ import { OAuth2Strategy as Strategy } from 'passport-google-oauth'
 
 import User from './models/User'
 
-export default function auth({ ROOT_URL, server }) {
+export default function auth({ server, ROOT_URL }) {
   const verify = async (accessToken, refreshToken, profile, verified) => {
     let email
     let avatarUrl

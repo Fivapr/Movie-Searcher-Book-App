@@ -1,11 +1,11 @@
-import dotenv from 'dotenv'
 import express from 'express'
-import next from 'next'
 import session from 'express-session'
-import mongoose from 'mongoose'
 import mongoSessionStore from 'connect-mongo'
+import next from 'next'
+import mongoose from 'mongoose'
+
+import dotenv from 'dotenv'
 import auth from './google'
-import User from './models/User'
 
 dotenv.config()
 
@@ -18,16 +18,18 @@ mongoose.connect(
 )
 
 const port = process.env.PORT || 8000
-const ROOT_URL = process.env.ROOT_URL || `http://localhost:${port}`
+const ROOT_URL = dev ? `http://localhost:${port}` : 'moviesearcher.app'
 
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
+// Nextjs's server prepared
 app.prepare().then(() => {
   const server = express()
-  const MongoStore = mongoSessionStore(session)
 
-  const sessionOptions = {
+  // confuring MongoDB session store
+  const MongoStore = mongoSessionStore(session)
+  const sess = {
     name: 'MSbook.sid',
     secret: 'HD2w.)q*VqRT4/#NK2M/,E^B)}FED5fWU!dKe[wk',
     store: new MongoStore({
@@ -37,18 +39,14 @@ app.prepare().then(() => {
     resave: false,
     saveUninitialized: false,
     cookie: {
+      httpOnly: true,
       maxAge: 14 * 24 * 60 * 60 * 1000,
     },
   }
 
-  server.use(session(sessionOptions))
-  auth({ server, ROOT_URL })
+  server.use(session(sess))
 
-  server.get('/', async (req, res) => {
-    const user = await User.findOne({ email: 'aintensifies@gmail.com' })
-    req.user = user
-    app.render(req, res, '/')
-  })
+  auth({ server, ROOT_URL })
 
   server.get('*', (req, res) => handle(req, res))
 

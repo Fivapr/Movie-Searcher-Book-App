@@ -8,8 +8,8 @@ import { styleLoginButton } from '../components/SharedStyles'
 const Login = () => (
   <div style={{ textAlign: 'center', margin: '0 20px' }}>
     <Head>
-      <title>Log in to Builder Book</title>
-      <meta name="description" content="Login page for builderbook.org" />
+      <title>Log in to Movie Searcher App</title>
+      <meta name="description" content="Login page for moviesearcher.app" />
     </Head>
     <br />
     <p style={{ margin: '45px auto', fontSize: '44px', fontWeight: '400' }}>Log in</p>

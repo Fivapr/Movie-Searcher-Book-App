@@ -1,14 +1,19 @@
 {
-  "name": "1-start",
+  "name": "moviesearcher",
   "version": "0.0.1",
   "license": "MIT",
   "scripts": {
     "build": "next build",
-    "start": "next start",
-    "dev": "nodemon server/app.js --watch server --exec babel-node --presets=@babel/preset-env",
-    "lint": "eslint components pages lib server --ext js,jsx --fix"
+    "start": "babel-node --presets=@babel/preset-env server/app.js",
+    "dev": "nodemon server/app.js --watch server --exec babel-node",
+    "lint": "eslint components pages lib server --fix",
+    "now": "now && now alias"
   },
   "dependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
     "@material-ui/core": "^3.3.0",
     "connect-mongo": "^2.0.1",
     "dotenv": "^6.1.0",
@@ -27,9 +32,6 @@
     "react-jss": "^8.6.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/node": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.7.0",
     "eslint-config-airbnb": "^17.1.0",
