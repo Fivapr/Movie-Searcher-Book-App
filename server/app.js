@@ -1,9 +1,10 @@
 import dotenv from 'dotenv'
 import express from 'express'
 import next from 'next'
-import mongoose from 'mongoose'
 import session from 'express-session'
+import mongoose from 'mongoose'
 import mongoSessionStore from 'connect-mongo'
+import auth from './google'
 import User from './models/User'
 
 dotenv.config()
@@ -36,16 +37,17 @@ app.prepare().then(() => {
     resave: false,
     saveUninitialized: false,
     cookie: {
-      httpOnly: true,
       maxAge: 14 * 24 * 60 * 60 * 1000,
     },
   }
 
   server.use(session(sessionOptions))
+  auth({ server, ROOT_URL })
 
   server.get('/', async (req, res) => {
     const user = await User.findOne({ email: 'aintensifies@gmail.com' })
-    app.render(req, res, '/', { user })
+    req.user = user
+    app.render(req, res, '/')
   })
 
   server.get('*', (req, res) => handle(req, res))
