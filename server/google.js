@@ -30,6 +30,7 @@ export default function auth({ server, ROOT_URL }) {
       console.log(err) // eslint-disable-line
     }
   }
+
   passport.use(
     new Strategy(
       {
