@@ -3,8 +3,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Head from 'next/head'
 
+import Button from '@material-ui/core/Button'
+
 import withAuth from '../lib/withAuth'
 import withLayout from '../lib/withLayout'
+import notify from '../lib/notifier'
 
 class Index extends React.Component {
   static propTypes = {
@@ -26,11 +29,11 @@ class Index extends React.Component {
           <title>Dashboard</title>
           <meta name="description" content="List of purchased books." />
         </Head>
-        <p> Dashboard </p>
-        <p>
-          Email:
-          {user.email}
-        </p>
+        <p>List of purchased books</p>
+        <p>Email: {user.email}</p>
+        <Button variant="contained" onClick={() => notify('success message')}>
+          Click me to test notify()
+        </Button>
       </div>
     )
   }
