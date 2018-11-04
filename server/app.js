@@ -6,6 +6,7 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import auth from './google'
 import logger from './logs'
+import api from './api'
 
 dotenv.config()
 
@@ -48,6 +49,7 @@ app.prepare().then(() => {
 
   auth({ server, ROOT_URL })
 
+  api(server)
   server.get('*', (req, res) => handle(req, res))
 
   server.listen(port, (err) => {
