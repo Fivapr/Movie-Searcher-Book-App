@@ -1,7 +1,8 @@
-import React from 'react'
-import Document, { Head, Main, NextScript } from 'next/document'
-import JssProvider from 'react-jss/lib/JssProvider'
-import getContext from '../lib/context'
+import React from 'react';
+import JssProvider from 'react-jss/lib/JssProvider';
+import Document, { Head, Main, NextScript } from 'next/document';
+
+import getContext from '../lib/context';
 
 class MyDocument extends Document {
   render() {
@@ -19,9 +20,12 @@ class MyDocument extends Document {
           />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Comfortaa:300,400&amp;subset=cyrillic"
+            href="https://fonts.googleapis.com/css?family=Muli:300,400:latin"
           />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+          />
           <link
             rel="stylesheet"
             href="https://storage.googleapis.com/builderbook/nprogress.min.css"
@@ -46,23 +50,22 @@ class MyDocument extends Document {
                 border-left: 0.25em solid #dfe2e5;
               }
               pre {
-                display: block;
-                overflow-x: auto;
-                padding: 0.5em;
-                background: #FFF;
+                display:block;
+                overflow-x:auto;
+                padding:0.5em;
+                background:#FFF;
+                color: #000;
                 border: 1px solid #ddd;
               }
               code {
                 font-size: 14px;
-                background: #FFF;
-                padding: 3px 5px;
               }
             `}
           </style>
         </Head>
         <body
           style={{
-            font: '16px Comfortaa',
+            font: '16px Muli',
             color: '#222',
             margin: '0px auto',
             fontWeight: '300',
@@ -74,13 +77,12 @@ class MyDocument extends Document {
           <NextScript />
         </body>
       </html>
-    )
+    );
   }
 }
 
 MyDocument.getInitialProps = ({ renderPage }) => {
-  const pageContext = getContext()
-
+  const pageContext = getContext();
   const page = renderPage(Component => props => (
     <JssProvider
       registry={pageContext.sheetsRegistry}
@@ -88,7 +90,7 @@ MyDocument.getInitialProps = ({ renderPage }) => {
     >
       <Component pageContext={pageContext} {...props} />
     </JssProvider>
-  ))
+  ));
 
   return {
     ...page,
@@ -102,7 +104,7 @@ MyDocument.getInitialProps = ({ renderPage }) => {
         }}
       />
     ),
-  }
-}
+  };
+};
 
-export default MyDocument
+export default MyDocument;

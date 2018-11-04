@@ -1,59 +1,71 @@
-import express from 'express'
-import session from 'express-session'
-import mongoSessionStore from 'connect-mongo'
-import next from 'next'
-import mongoose from 'mongoose'
-import dotenv from 'dotenv'
-import auth from './google'
-import logger from './logs'
-import api from './api'
+import express from 'express';
+import session from 'express-session';
+import mongoSessionStore from 'connect-mongo';
+import next from 'next';
+import mongoose from 'mongoose';
 
-dotenv.config()
+import auth from './google';
+import api from './api';
 
-const dev = process.env.NODE_ENV !== 'production'
-const MONGO_URL = process.env.MONGO_URL_TEST
+import logger from './logs';
 
-mongoose.connect(
-  MONGO_URL,
-  { useNewUrlParser: true },
-)
+require('dotenv').config();
 
-const port = process.env.PORT || 8000
-const ROOT_URL = dev ? `http://localhost:${port}` : 'moviesearcher.app'
+const dev = process.env.NODE_ENV !== 'production';
+const MONGO_URL = process.env.MONGO_URL_TEST;
 
-const app = next({ dev })
-const handle = app.getRequestHandler()
+mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
-// Nextjs's server prepared
+const port = process.env.PORT || 8000;
+const ROOT_URL = process.env.ROOT_URL || `http://localhost:${port}`;
+
+const URL_MAP = {
+  '/login': '/public/login',
+};
+
+const app = next({ dev });
+const handle = app.getRequestHandler();
+
 app.prepare().then(() => {
-  const server = express()
+  const server = express();
 
-  // confuring MongoDB session store
-  const MongoStore = mongoSessionStore(session)
+  const MongoStore = mongoSessionStore(session);
   const sess = {
-    name: 'MSbook.sid',
+    name: 'builderbook.sid',
     secret: 'HD2w.)q*VqRT4/#NK2M/,E^B)}FED5fWU!dKe[wk',
     store: new MongoStore({
       mongooseConnection: mongoose.connection,
-      ttl: 14 * 24 * 60 * 60, // save session 14 days
+      ttl: 14 * 24 * 60 * 60, // expires in 14 days
     }),
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      maxAge: 14 * 24 * 60 * 60 * 1000,
+      maxAge: 14 * 24 * 60 * 60 * 1000, // expires in 14 days
     },
-  }
+  };
 
-  server.use(session(sess))
+  server.use(session(sess));
 
-  auth({ server, ROOT_URL })
+  auth({ server, ROOT_URL });
+  api(server);
 
-  api(server)
-  server.get('*', (req, res) => handle(req, res))
+  server.get('/books/:bookSlug/:chapterSlug', (req, res) => {
+    const { bookSlug, chapterSlug } = req.params;
+    app.render(req, res, '/public/read-chapter', { bookSlug, chapterSlug });
+  });
+
+  server.get('*', (req, res) => {
+    const url = URL_MAP[req.path];
+    if (url) {
+      app.render(req, res, url);
+    } else {
+      handle(req, res);
+    }
+  });
 
   server.listen(port, (err) => {
-    if (err) throw err
-    logger.info(`> Ready on ${ROOT_URL}`)
-  })
-})
+    if (err) throw err;
+    logger.info(`> Ready on ${ROOT_URL}`);
+  });
+});

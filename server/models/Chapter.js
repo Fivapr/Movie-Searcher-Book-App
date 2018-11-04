@@ -1,8 +1,8 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
-import Book from './Book'
+import Book from './Book';
 
-const { Schema } = mongoose
+const { Schema } = mongoose;
 
 const mongoSchema = new Schema({
   bookId: {
@@ -14,6 +14,9 @@ const mongoSchema = new Schema({
     required: true,
     default: false,
   },
+  githubFilePath: {
+    type: String,
+  },
   title: {
     type: String,
     required: true,
@@ -22,25 +25,23 @@ const mongoSchema = new Schema({
     type: String,
     required: true,
   },
+  excerpt: {
+    type: String,
+    default: '',
+  },
   content: {
     type: String,
     default: '',
     required: true,
   },
-  excerpt: {
+  htmlContent: {
     type: String,
     default: '',
-  },
-  htmlExcerpt: {
-    type: String,
-    default: '',
+    required: true,
   },
   createdAt: {
     type: Date,
     required: true,
-  },
-  githubFilePath: {
-    type: String,
   },
   order: {
     type: Number,
@@ -48,33 +49,33 @@ const mongoSchema = new Schema({
   },
   seoTitle: String,
   seoDescription: String,
-})
+});
 
 class ChapterClass {
-  static async getBySlug({ bookSlug, chapterSlug, user }) {
-    const book = await Book.getBySlug({ slug: bookSlug, user })
+  static async getBySlug({ bookSlug, chapterSlug, userId }) {
+    const book = await Book.getBySlug({ slug: bookSlug, userId });
     if (!book) {
-      throw new Error('Not found')
+      throw new Error('Book not found');
     }
 
-    const chapter = await this.findOne({ bookId: book._id, slug: chapterSlug })
+    const chapter = await this.findOne({ bookId: book._id, slug: chapterSlug });
 
     if (!chapter) {
-      throw new Error('Not found')
+      throw new Error('Chapter not found');
     }
 
-    const chapterObj = chapter.toObject()
-    chapterObj.book = book
+    const chapterObj = chapter.toObject();
+    chapterObj.book = book;
 
-    return chapterObj
+    return chapterObj;
   }
 }
 
-mongoSchema.index({ bookId: 1, slug: 1 }, { unique: true })
-mongoSchema.index({ bookId: 1, githubFilePath: 1 }, { unique: true })
+mongoSchema.index({ bookId: 1, slug: 1 }, { unique: true });
+mongoSchema.index({ bookId: 1, githubFilePath: 1 }, { unique: true });
 
-mongoSchema.loadClass(ChapterClass)
+mongoSchema.loadClass(ChapterClass);
 
-const Chapter = mongoose.model('Chapter', mongoSchema)
+const Chapter = mongoose.model('Chapter', mongoSchema);
 
-export default Chapter
+export default Chapter;

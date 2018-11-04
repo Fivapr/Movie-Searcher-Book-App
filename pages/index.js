@@ -1,13 +1,10 @@
-/* eslint-disable */
-import React from 'react'
-import PropTypes from 'prop-types'
-import Head from 'next/head'
+import React from 'react';
+import PropTypes from 'prop-types';
+import Head from 'next/head';
 
-import Button from '@material-ui/core/Button'
+import withAuth from '../lib/withAuth';
+import withLayout from '../lib/withLayout';
 
-import withAuth from '../lib/withAuth'
-import withLayout from '../lib/withLayout'
-import notify from '../lib/notifier'
 
 class Index extends React.Component {
   static propTypes = {
@@ -22,21 +19,24 @@ class Index extends React.Component {
   }
 
   render() {
-    const { user } = this.props
+    const { user } = this.props;
     return (
       <div style={{ padding: '10px 45px' }}>
         <Head>
-          <title>Dashboard</title>
-          <meta name="description" content="List of purchased books." />
+          <title>Settings</title>
+          <meta
+            name="description"
+            content="List of purchased books."
+          />
         </Head>
         <p>List of purchased books</p>
-        <p>Email: {user.email}</p>
-        <Button variant="contained" onClick={() => notify('success message')}>
-          Click me to test notify()
-        </Button>
+        <p>
+Email:
+          {user.email}
+        </p>
       </div>
-    )
+    );
   }
 }
 
-export default withAuth(withLayout(Index))
+export default withAuth(withLayout(Index));
