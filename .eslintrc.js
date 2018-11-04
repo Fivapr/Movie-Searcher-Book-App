@@ -21,5 +21,6 @@ module.exports = {
       },
     ],
     'no-underscore-dangle': ['error', { allow: ['_id'] }],
+    'prefer-destructuring': 0,
   },
 }

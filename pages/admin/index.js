@@ -1,19 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Link from 'next/link'
 
-import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button'
 
-import notify from '../../lib/notifier';
+import notify from '../../lib/notifier'
 
-import withLayout from '../../lib/withLayout';
-import withAuth from '../../lib/withAuth';
-import { getBookList } from '../../lib/api/admin';
+import withLayout from '../../lib/withLayout'
+import withAuth from '../../lib/withAuth'
+import { getBookList } from '../../lib/api/admin'
 
-
-const Index = ({
-  books,
-}) => (
+const Index = ({ books }) => (
   <div style={{ padding: '10px 45px' }}>
     <div>
       <h2>Books</h2>
@@ -24,10 +21,7 @@ const Index = ({
       <ul>
         {books.map(b => (
           <li key={b._id}>
-            <Link
-              as={`/admin/book-detail/${b.slug}`}
-              href={`/admin/book-detail?slug=${b.slug}`}
-            >
+            <Link as={`/admin/book-detail/${b.slug}`} href={`/admin/book-detail?slug=${b.slug}`}>
               <a>{b.name}</a>
             </Link>
           </li>
@@ -36,36 +30,34 @@ const Index = ({
       <br />
     </div>
   </div>
-);
+)
 
 Index.propTypes = {
-  books: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    slug: PropTypes.string.isRequired,
-  })).isRequired,
-};
+  books: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      slug: PropTypes.string.isRequired,
+    }),
+  ).isRequired,
+}
 
 class IndexWithData extends React.Component {
   state = {
     books: [],
-  };
+  }
 
   async componentDidMount() {
     try {
-      const { books } = await getBookList();
-      this.setState({ books }); // eslint-disable-line
+      const { books } = await getBookList()
+      this.setState({ books }) // eslint-disable-line
     } catch (err) {
-      notify(err);
+      notify(err)
     }
   }
 
   render() {
-    return (
-      <Index
-        {...this.state}
-      />
-    );
+    return <Index {...this.state} />
   }
 }
 
-export default withAuth(withLayout(IndexWithData));
+export default withAuth(withLayout(IndexWithData))

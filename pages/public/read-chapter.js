@@ -1,89 +1,89 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Error from 'next/error';
-import Head from 'next/head';
-import Grid from '@material-ui/core/Grid';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Error from 'next/error'
+import Head from 'next/head'
+import Grid from '@material-ui/core/Grid'
 
-import { getChapterDetail } from '../../lib/api/public';
-import withLayout from '../../lib/withLayout';
-import withAuth from '../../lib/withAuth';
+import { getChapterDetail } from '../../lib/api/public'
+import withLayout from '../../lib/withLayout'
+import withAuth from '../../lib/withAuth'
 
 const styleGrid = {
   flexGrow: '1',
-};
+}
 
 class ReadChapter extends React.Component {
   static propTypes = {
     chapter: PropTypes.shape({
       _id: PropTypes.string.isRequired,
     }),
-  };
+  }
 
   static defaultProps = {
     chapter: null,
-  };
+  }
 
   static async getInitialProps({ req, query }) {
-    const { bookSlug, chapterSlug } = query;
+    const { bookSlug, chapterSlug } = query
 
-    const headers = {};
+    const headers = {}
     if (req && req.headers && req.headers.cookie) {
-      headers.cookie = req.headers.cookie;
+      headers.cookie = req.headers.cookie
     }
 
-    const chapter = await getChapterDetail({ bookSlug, chapterSlug }, { headers });
+    const chapter = await getChapterDetail({ bookSlug, chapterSlug }, { headers })
 
-    return { chapter };
+    return { chapter }
   }
 
   constructor(props) {
-    super(props);
+    super(props)
 
-    const { chapter } = props;
+    const { chapter } = props
 
-    let htmlContent = '';
+    let htmlContent = ''
     if (chapter) {
-      htmlContent = chapter.htmlContent;
+      htmlContent = chapter.htmlContent
     }
 
     this.state = {
       chapter,
       htmlContent,
-    };
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    const { chapter } = nextProps;
+    const { chapter } = nextProps
 
     if (chapter && chapter._id !== this.props.chapter._id) {
-      const { htmlContent } = chapter;
-      this.setState({ chapter, htmlContent });
+      const { htmlContent } = chapter
+      this.setState({ chapter, htmlContent })
     }
   }
 
   renderChapterContent() {
-    const { chapter, htmlContent } = this.state;
+    const { chapter, htmlContent } = this.state
 
     return (
       <div>
         <h3>
-Chapter:
+          Chapter:
           {chapter.title}
         </h3>
 
         <div className="main-content" dangerouslySetInnerHTML={{ __html: htmlContent }} />
       </div>
-    );
+    )
   }
 
   render() {
-    const { chapter } = this.state;
+    const { chapter } = this.state
 
     if (!chapter) {
-      return <Error statusCode={404} />;
+      return <Error statusCode={404} />
     }
 
-    const { book } = chapter;
+    const { book } = chapter
 
     return (
       <div style={{ padding: '10px 45px' }}>
@@ -109,7 +109,7 @@ Chapter:
             }}
           >
             <h2>
-Book:
+              Book:
               {book.name}
             </h2>
 
@@ -117,8 +117,8 @@ Book:
           </Grid>
         </Grid>
       </div>
-    );
+    )
   }
 }
 
-export default withAuth(withLayout(ReadChapter), { loginRequired: false });
+export default withAuth(withLayout(ReadChapter), { loginRequired: false })
