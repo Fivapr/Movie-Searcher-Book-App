@@ -1,13 +1,13 @@
-import aws from 'aws-sdk'
+import aws from 'aws-sdk';
 
 export default function sendEmail(options) {
   aws.config.update({
     region: process.env.Amazon_region,
     accessKeyId: process.env.Amazon_accessKeyId,
     secretAccessKey: process.env.Amazon_secretAccessKey,
-  })
+  });
 
-  const ses = new aws.SES({ apiVersion: 'latest' })
+  const ses = new aws.SES({ apiVersion: 'latest' });
 
   return new Promise((resolve, reject) => {
     ses.sendEmail(
@@ -31,11 +31,11 @@ export default function sendEmail(options) {
       },
       (err, info) => {
         if (err) {
-          reject(err)
+          reject(err);
         } else {
-          resolve(info)
+          resolve(info);
         }
       },
-    )
-  })
+    );
+  });
 }

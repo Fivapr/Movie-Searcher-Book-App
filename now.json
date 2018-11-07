@@ -1,0 +1,17 @@
+{
+  "env": {
+    "ROOT_URL": "https://moviesearcher.app",
+    "NODE_ENV": "production"
+  },
+  "dotenv": true,
+  "engines": {
+    "node": "^10.7.0"
+  },
+  "alias": "moviesearcher.app",
+  "scale": {
+    "sfo1": {
+      "min": 1,
+      "max": 1
+    }
+  }
+}

@@ -3,8 +3,7 @@
 tmp/
 npm-debug.log
 .DS_Store
-now.json
-yarn.lock
+
 
 .build/*
 .next
