@@ -7,7 +7,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
 import { getGithubRepos } from '../../lib/api/admin';
-import { styleTextField } from '../../components/SharedStyles';
+import { styleTextField } from '../SharedStyles';
 import notify from '../../lib/notifier';
 
 class EditBook extends React.Component {

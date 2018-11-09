@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import _ from 'lodash';
+import mongoose from 'mongoose';
 
 import generateSlug from '../utils/slugify';
 import sendEmail from '../aws';
@@ -48,11 +48,21 @@ const mongoSchema = new Schema({
   githubAccessToken: {
     type: String,
   },
+  purchasedBookIds: [String],
 });
 
 class UserClass {
   static publicFields() {
-    return ['id', 'displayName', 'email', 'avatarUrl', 'slug', 'isAdmin', 'isGithubConnected'];
+    return [
+      'id',
+      'displayName',
+      'email',
+      'avatarUrl',
+      'slug',
+      'isAdmin',
+      'isGithubConnected',
+      'purchasedBookIds',
+    ];
   }
 
   static async signInOrSignUp({

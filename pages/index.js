@@ -30,7 +30,10 @@ class Index extends React.Component {
           />
         </Head>
         <p>List of purchased books</p>
-        <p>Email: {user.email}</p>
+        <p>
+Email:
+          {user.email}
+        </p>
       </div>
     );
   }

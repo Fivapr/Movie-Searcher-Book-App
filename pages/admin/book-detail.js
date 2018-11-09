@@ -40,7 +40,8 @@ const MyBook = ({ book, error }) => {
       <p />
       <Button variant="raised" onClick={handleSyncContent(book._id)}>
         Sync with Github
-      </Button>{' '}
+      </Button>
+      {' '}
       <Link as={`/admin/edit-book/${book.slug}`} href={`/admin/edit-book?slug=${book.slug}`}>
         <Button variant="raised">Edit book</Button>
       </Link>

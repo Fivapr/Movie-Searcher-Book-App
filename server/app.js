@@ -1,9 +1,12 @@
 import express from 'express';
 import session from 'express-session';
+import compression from 'compression';
 import mongoSessionStore from 'connect-mongo';
 import next from 'next';
 import mongoose from 'mongoose';
-
+import helmet from 'helmet';
+import getRootUrl from '../lib/api/getRootUrl';
+import sitemapAndRobots from './sitemapAndRobots';
 import auth from './google';
 import { setupGithub as github } from './github';
 import api from './api';
@@ -19,7 +22,7 @@ const MONGO_URL = process.env.MONGO_URL_TEST;
 mongoose.connect(MONGO_URL, { useNewUrlParser: true });
 
 const port = process.env.PORT || 8000;
-const ROOT_URL = process.env.ROOT_URL || `http://localhost:${port}`;
+const ROOT_URL = getRootUrl();
 
 const URL_MAP = {
   '/login': '/public/login',
@@ -32,6 +35,8 @@ const handle = app.getRequestHandler();
 app.prepare().then(() => {
   const server = express();
 
+  server.use(helmet());
+  server.use(compression());
   server.use(express.json());
 
   const MongoStore = mongoSessionStore(session);
@@ -50,12 +55,18 @@ app.prepare().then(() => {
     },
   };
 
+  if (!dev) {
+    server.set('trust proxy', 1); // sets req.hostname, req.ip
+    sess.cookie.secure = true; // sets cookie over HTTPS only
+  }
+
   server.use(session(sess));
 
   auth({ server, ROOT_URL });
   github({ server });
   api(server);
   routesWithSlug({ server, app });
+  sitemapAndRobots({ server });
 
   server.get('*', (req, res) => {
     const url = URL_MAP[req.path];
@@ -71,4 +82,3 @@ app.prepare().then(() => {
     logger.info(`> Ready on ${ROOT_URL}`);
   });
 });
-

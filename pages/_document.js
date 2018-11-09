@@ -1,8 +1,15 @@
 import React from 'react';
 import JssProvider from 'react-jss/lib/JssProvider';
 import Document, { Head, Main, NextScript } from 'next/document';
+import htmlescape from 'htmlescape';
 
 import getContext from '../lib/context';
+
+const { StripePublishableKey } = process.env;
+// console.log(StripePublishableKey);
+
+const env = { StripePublishableKey };
+// console.log(env);
 
 class MyDocument extends Document {
   render() {
@@ -61,9 +68,11 @@ class MyDocument extends Document {
                 background:#FFF;
                 color: #000;
                 border: 1px solid #ddd;
+                font-size: 14px;
               }
               code {
                 font-size: 14px;
+                background: #FFF;
               }
             `}
           </style>
@@ -80,6 +89,8 @@ class MyDocument extends Document {
           }}
         >
           <Main />
+          {/* eslint-disable-next-line react/no-danger */}
+          <script dangerouslySetInnerHTML={{ __html: `__ENV__ = ${htmlescape(env)}` }} />
           <NextScript />
         </body>
       </html>
