@@ -1,14 +1,14 @@
-import PropTypes from 'prop-types';
-import Link from 'next/link';
-import Toolbar from '@material-ui/core/Toolbar';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
-import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
+import PropTypes from 'prop-types'
+import Link from 'next/link'
+import Toolbar from '@material-ui/core/Toolbar'
+import Grid from '@material-ui/core/Grid'
+import Hidden from '@material-ui/core/Hidden'
+import Button from '@material-ui/core/Button'
+import Avatar from '@material-ui/core/Avatar'
 
-import MenuDrop from './MenuDrop';
+import MenuDrop from './MenuDrop'
 
-import { styleToolbar, styleRaisedButton } from './SharedStyles';
+import { styleToolbar, styleRaisedButton } from './SharedStyles'
 
 const optionsMenuCustomer = [
   {
@@ -20,7 +20,7 @@ const optionsMenuCustomer = [
     text: 'Log out',
     href: '/logout',
   },
-];
+]
 
 const optionsMenuAdmin = [
   {
@@ -31,7 +31,7 @@ const optionsMenuAdmin = [
     text: 'Log out',
     href: '/logout',
   },
-];
+]
 
 function Header({ user, hideHeader, redirectUrl }) {
   return (
@@ -98,7 +98,7 @@ function Header({ user, hideHeader, redirectUrl }) {
         </Grid>
       </Toolbar>
     </div>
-  );
+  )
 }
 
 Header.propTypes = {
@@ -108,12 +108,12 @@ Header.propTypes = {
   }),
   hideHeader: PropTypes.bool,
   redirectUrl: PropTypes.string,
-};
+}
 
 Header.defaultProps = {
   user: null,
   hideHeader: false,
   redirectUrl: '',
-};
+}
 
-export default Header;
+export default Header

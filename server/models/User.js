@@ -1,12 +1,12 @@
-import _ from 'lodash';
-import mongoose from 'mongoose';
+import _ from 'lodash'
+import mongoose from 'mongoose'
 
-import generateSlug from '../utils/slugify';
-import sendEmail from '../aws';
-import getEmailTemplate from './EmailTemplate';
-import logger from '../logs';
+import generateSlug from '../utils/slugify'
+import sendEmail from '../aws'
+import getEmailTemplate from './EmailTemplate'
+import logger from '../logs'
 
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 const mongoSchema = new Schema({
   googleId: {
@@ -49,7 +49,7 @@ const mongoSchema = new Schema({
     type: String,
   },
   purchasedBookIds: [String],
-});
+})
 
 class UserClass {
   static publicFields() {
@@ -62,35 +62,35 @@ class UserClass {
       'isAdmin',
       'isGithubConnected',
       'purchasedBookIds',
-    ];
+    ]
   }
 
   static async signInOrSignUp({
     googleId, email, googleToken, displayName, avatarUrl,
   }) {
-    const user = await this.findOne({ googleId }).select(UserClass.publicFields().join(' '));
+    const user = await this.findOne({ googleId }).select(UserClass.publicFields().join(' '))
 
     if (user) {
-      const modifier = {};
+      const modifier = {}
 
       if (googleToken.accessToken) {
-        modifier.access_token = googleToken.accessToken;
+        modifier.access_token = googleToken.accessToken
       }
 
       if (googleToken.refreshToken) {
-        modifier.refresh_token = googleToken.refreshToken;
+        modifier.refresh_token = googleToken.refreshToken
       }
 
       if (_.isEmpty(modifier)) {
-        return user;
+        return user
       }
 
-      await this.updateOne({ googleId }, { $set: modifier });
+      await this.updateOne({ googleId }, { $set: modifier })
 
-      return user;
+      return user
     }
 
-    const slug = await generateSlug(this, displayName);
+    const slug = await generateSlug(this, displayName)
 
     const newUser = await this.create({
       createdAt: new Date(),
@@ -100,11 +100,11 @@ class UserClass {
       displayName,
       avatarUrl,
       slug,
-    });
+    })
 
     const template = await getEmailTemplate('welcome', {
       userName: displayName,
-    });
+    })
 
     try {
       await sendEmail({
@@ -112,17 +112,17 @@ class UserClass {
         to: [email],
         subject: template.subject,
         body: template.message,
-      });
+      })
     } catch (err) {
-      logger.error('Email sending error:', err);
+      logger.error('Email sending error:', err)
     }
 
-    return _.pick(newUser, UserClass.publicFields());
+    return _.pick(newUser, UserClass.publicFields())
   }
 }
 
-mongoSchema.loadClass(UserClass);
+mongoSchema.loadClass(UserClass)
 
-const User = mongoose.model('User', mongoSchema);
+const User = mongoose.model('User', mongoSchema)
 
-export default User;
+export default User

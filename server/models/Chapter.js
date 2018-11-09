@@ -1,31 +1,31 @@
-import mongoose from 'mongoose';
-import marked from 'marked';
-import he from 'he';
-import hljs from 'highlight.js';
-import generateSlug from '../utils/slugify';
-import Book from './Book';
-import Purchase from './Purchase';
+import mongoose from 'mongoose'
+import marked from 'marked'
+import he from 'he'
+import hljs from 'highlight.js'
+import generateSlug from '../utils/slugify'
+import Book from './Book'
+import Purchase from './Purchase'
 
 function markdownToHtml(content) {
-  const renderer = new marked.Renderer();
+  const renderer = new marked.Renderer()
 
   renderer.link = (href, title, text) => {
-    const t = title ? ` title="${title}"` : '';
-    return `<a target="_blank" href="${href}" rel="noopener noreferrer"${t}>${text}</a>`;
-  };
+    const t = title ? ` title="${title}"` : ''
+    return `<a target="_blank" href="${href}" rel="noopener noreferrer"${t}>${text}</a>`
+  }
 
   renderer.image = href => `<img
     src="${href}"
     style="border: 1px solid #ddd;"
     width="100%"
     alt="Builder Book"
-  >`;
+  >`
 
   renderer.heading = (text, level) => {
     const escapedText = text
       .trim()
       .toLowerCase()
-      .replace(/[^\w]+/g, '-');
+      .replace(/[^\w]+/g, '-')
 
     if (level === 2) {
       return `<h${level} class="chapter-section" style="color: #222; font-weight: 400;">
@@ -39,7 +39,7 @@ function markdownToHtml(content) {
           <span class="section-anchor" name="${escapedText}">
             ${text}
           </span>
-        </h${level}>`;
+        </h${level}>`
     }
 
     if (level === 4) {
@@ -52,54 +52,54 @@ function markdownToHtml(content) {
             <i class="material-icons" style="vertical-align: middle; opacity: 0.5; cursor: pointer;">link</i>
           </a>
           ${text}
-        </h${level}>`;
+        </h${level}>`
     }
 
-    return `<h${level} style="color: #222; font-weight: 400;">${text}</h${level}>`;
-  };
+    return `<h${level} style="color: #222; font-weight: 400;">${text}</h${level}>`
+  }
 
   marked.setOptions({
     renderer,
     breaks: true,
     highlight(code, lang) {
       if (!lang) {
-        return hljs.highlightAuto(code).value;
+        return hljs.highlightAuto(code).value
       }
 
-      return hljs.highlight(lang, code).value;
+      return hljs.highlight(lang, code).value
     },
-  });
+  })
 
-  return marked(he.decode(content));
+  return marked(he.decode(content))
 }
 
 function getSections(content) {
-  const renderer = new marked.Renderer();
+  const renderer = new marked.Renderer()
 
-  const sections = [];
+  const sections = []
   renderer.heading = (text, level) => {
     if (level !== 2) {
-      return;
+      return
     }
 
     const escapedText = text
       .trim()
       .toLowerCase()
-      .replace(/[^\w]+/g, '-');
+      .replace(/[^\w]+/g, '-')
 
-    sections.push({ text, level, escapedText });
-  };
+    sections.push({ text, level, escapedText })
+  }
 
   marked.setOptions({
     renderer,
-  });
+  })
 
-  marked(he.decode(content));
+  marked(he.decode(content))
 
-  return sections;
+  return sections
 }
 
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 const mongoSchema = new Schema({
   bookId: {
@@ -157,39 +157,39 @@ const mongoSchema = new Schema({
       escapedText: String,
     },
   ],
-});
+})
 
 class ChapterClass {
   static async getBySlug({
     bookSlug, chapterSlug, userId, isAdmin,
   }) {
-    const book = await Book.getBySlug({ slug: bookSlug });
+    const book = await Book.getBySlug({ slug: bookSlug })
     if (!book) {
-      throw new Error('Book not found');
+      throw new Error('Book not found')
     }
 
-    const chapter = await this.findOne({ bookId: book._id, slug: chapterSlug });
+    const chapter = await this.findOne({ bookId: book._id, slug: chapterSlug })
 
     if (!chapter) {
-      throw new Error('Chapter not found');
+      throw new Error('Chapter not found')
     }
 
-    const chapterObj = chapter.toObject();
-    chapterObj.book = book;
+    const chapterObj = chapter.toObject()
+    chapterObj.book = book
 
     if (userId) {
-      const purchase = await Purchase.findOne({ userId, bookId: book._id });
+      const purchase = await Purchase.findOne({ userId, bookId: book._id })
 
-      chapterObj.isPurchased = !!purchase || isAdmin;
+      chapterObj.isPurchased = !!purchase || isAdmin
     }
 
-    const isFreeOrPurchased = chapter.isFree || chapterObj.isPurchased;
+    const isFreeOrPurchased = chapter.isFree || chapterObj.isPurchased
 
     if (!isFreeOrPurchased) {
-      delete chapterObj.htmlContent;
+      delete chapterObj.htmlContent
     }
 
-    return chapterObj;
+    return chapterObj
   }
 
   static async syncContent({ book, data }) {
@@ -199,30 +199,30 @@ class ChapterClass {
       isFree = false,
       seoTitle = '',
       seoDescription = '',
-    } = data.attributes;
+    } = data.attributes
 
-    const { body, path } = data;
+    const { body, path } = data
 
     const chapter = await this.findOne({
       bookId: book.id,
       githubFilePath: path,
-    });
+    })
 
-    let order;
+    let order
 
     if (path === 'introduction.md') {
-      order = 1;
+      order = 1
     } else {
-      order = parseInt(path.match(/[0-9]+/), 10) + 1;
+      order = parseInt(path.match(/[0-9]+/), 10) + 1
     }
 
-    const content = body;
-    const htmlContent = markdownToHtml(content);
-    const htmlExcerpt = markdownToHtml(excerpt);
-    const sections = getSections(content);
+    const content = body
+    const htmlContent = markdownToHtml(content)
+    const htmlExcerpt = markdownToHtml(excerpt)
+    const sections = getSections(content)
 
     if (!chapter) {
-      const slug = await generateSlug(this, title, { bookId: book._id });
+      const slug = await generateSlug(this, title, { bookId: book._id })
 
       return this.create({
         bookId: book._id,
@@ -239,7 +239,7 @@ class ChapterClass {
         seoTitle,
         seoDescription,
         createdAt: new Date(),
-      });
+      })
     }
 
     const modifier = {
@@ -252,24 +252,24 @@ class ChapterClass {
       order,
       seoTitle,
       seoDescription,
-    };
-
-    if (title !== chapter.title) {
-      modifier.title = title;
-      modifier.slug = await generateSlug(this, title, {
-        bookId: chapter.bookId,
-      });
     }
 
-    return this.updateOne({ _id: chapter._id }, { $set: modifier });
+    if (title !== chapter.title) {
+      modifier.title = title
+      modifier.slug = await generateSlug(this, title, {
+        bookId: chapter.bookId,
+      })
+    }
+
+    return this.updateOne({ _id: chapter._id }, { $set: modifier })
   }
 }
 
-mongoSchema.index({ bookId: 1, slug: 1 }, { unique: true });
-mongoSchema.index({ bookId: 1, githubFilePath: 1 }, { unique: true });
+mongoSchema.index({ bookId: 1, slug: 1 }, { unique: true })
+mongoSchema.index({ bookId: 1, githubFilePath: 1 }, { unique: true })
 
-mongoSchema.loadClass(ChapterClass);
+mongoSchema.loadClass(ChapterClass)
 
-const Chapter = mongoose.model('Chapter', mongoSchema);
+const Chapter = mongoose.model('Chapter', mongoSchema)
 
-export default Chapter;
+export default Chapter

@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Input from '@material-ui/core/Input';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Input from '@material-ui/core/Input'
+import Select from '@material-ui/core/Select'
+import MenuItem from '@material-ui/core/MenuItem'
 
-import { getGithubRepos } from '../../lib/api/admin';
-import { styleTextField } from '../SharedStyles';
-import notify from '../../lib/notifier';
+import { getGithubRepos } from '../../lib/api/admin'
+import { styleTextField } from '../SharedStyles'
+import notify from '../../lib/notifier'
 
 class EditBook extends React.Component {
   static propTypes = {
@@ -16,51 +16,51 @@ class EditBook extends React.Component {
       _id: PropTypes.string.isRequired,
     }),
     onSave: PropTypes.func.isRequired,
-  };
+  }
 
   static defaultProps = {
     book: null,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       book: props.book || {},
       repos: [],
-    };
+    }
   }
 
   async componentDidMount() {
     try {
-      const { repos } = await getGithubRepos();
-      this.setState({ repos }); // eslint-disable-line
+      const { repos } = await getGithubRepos()
+      this.setState({ repos }) // eslint-disable-line
     } catch (err) {
-      console.log(err); // eslint-disable-line
+      console.log(err) // eslint-disable-line
     }
   }
 
   onSubmit = (event) => {
-    event.preventDefault();
-    const { name, price, githubRepo } = this.state.book;
+    event.preventDefault()
+    const { name, price, githubRepo } = this.state.book
 
     if (!name) {
-      notify('Name is required');
-      return;
+      notify('Name is required')
+      return
     }
 
     if (!price) {
-      notify('Price is required');
-      return;
+      notify('Price is required')
+      return
     }
 
     if (!githubRepo) {
-      notify('Github repo is required');
-      return;
+      notify('Github repo is required')
+      return
     }
 
-    this.props.onSave(this.state.book);
-  };
+    this.props.onSave(this.state.book)
+  }
 
   render() {
     return (
@@ -72,7 +72,7 @@ class EditBook extends React.Component {
               onChange={(event) => {
                 this.setState({
                   book: Object.assign({}, this.state.book, { name: event.target.value }),
-                });
+                })
               }}
               value={this.state.book.name}
               type="text"
@@ -87,7 +87,7 @@ class EditBook extends React.Component {
             onChange={(event) => {
               this.setState({
                 book: Object.assign({}, this.state.book, { price: Number(event.target.value) }),
-              });
+              })
             }}
             value={this.state.book.price}
             type="number"
@@ -107,7 +107,7 @@ class EditBook extends React.Component {
               onChange={(event) => {
                 this.setState({
                   book: Object.assign({}, this.state.book, { githubRepo: event.target.value }),
-                });
+                })
               }}
             >
               <MenuItem value="">
@@ -127,8 +127,8 @@ class EditBook extends React.Component {
           </Button>
         </form>
       </div>
-    );
+    )
   }
 }
 
-export default EditBook;
+export default EditBook

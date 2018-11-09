@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
-import _ from 'lodash';
-import logger from '../logs';
+import mongoose from 'mongoose'
+import _ from 'lodash'
+import logger from '../logs'
 
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 const mongoSchema = new Schema({
   name: {
@@ -18,9 +18,9 @@ const mongoSchema = new Schema({
     type: String,
     required: true,
   },
-});
+})
 
-const EmailTemplate = mongoose.model('EmailTemplate', mongoSchema);
+const EmailTemplate = mongoose.model('EmailTemplate', mongoSchema)
 
 function insertTemplates() {
   const templates = [
@@ -58,31 +58,31 @@ function insertTemplates() {
         Kelly & Timur, Team Builder Book
       `,
     },
-  ];
+  ]
 
   templates.forEach(async (template) => {
     if ((await EmailTemplate.find({ name: template.name }).count()) > 0) {
-      return;
+      return
     }
 
     EmailTemplate.create(template).catch((error) => {
-      logger.error('EmailTemplate insertion error:', error);
-    });
-  });
+      logger.error('EmailTemplate insertion error:', error)
+    })
+  })
 }
 
-insertTemplates();
+insertTemplates()
 
 export default async function getEmailTemplate(name, params) {
-  const source = await EmailTemplate.findOne({ name });
+  const source = await EmailTemplate.findOne({ name })
   if (!source) {
     throw new Error(`No EmailTemplates found.
       Please check that at least one is generated at server startup,
-      restart your server and try again.`);
+      restart your server and try again.`)
   }
 
   return {
     message: _.template.compile(source.message)(params),
     subject: _.template.compile(source.subject)(params),
-  };
+  }
 }

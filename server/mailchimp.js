@@ -1,16 +1,16 @@
-import request from 'request';
+import request from 'request'
 
-require('dotenv').config();
+require('dotenv').config()
 
 export async function subscribe({ email }) {
   const data = {
     email_address: email,
     status: 'subscribed',
-  };
+  }
 
-  const LIST_IDS = process.env.MAILCHIMP_PURCHASED_LIST_ID;
+  const LIST_IDS = process.env.MAILCHIMP_PURCHASED_LIST_ID
 
-  const API_KEY = process.env.MAILCHIMP_API_KEY;
+  const API_KEY = process.env.MAILCHIMP_API_KEY
 
   await new Promise((resolve, reject) => {
     request.post(
@@ -25,11 +25,11 @@ export async function subscribe({ email }) {
       },
       (err, response, body) => {
         if (err) {
-          reject(err);
+          reject(err)
         } else {
-          resolve(body);
+          resolve(body)
         }
       },
-    );
-  });
+    )
+  })
 }

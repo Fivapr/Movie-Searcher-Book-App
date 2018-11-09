@@ -1,6 +1,6 @@
-import mongoose from 'mongoose';
+import mongoose from 'mongoose'
 
-const { Schema } = mongoose;
+const { Schema } = mongoose
 
 const mongoSchema = new Schema({
   userId: {
@@ -27,10 +27,10 @@ const mongoSchema = new Schema({
     paid: Boolean,
     status: String,
   },
-});
+})
 
-mongoSchema.index({ bookId: 1, userId: 1 }, { unique: true });
+mongoSchema.index({ bookId: 1, userId: 1 }, { unique: true })
 
-const Purchase = mongoose.model('Purchase', mongoSchema);
+const Purchase = mongoose.model('Purchase', mongoSchema)
 
-export default Purchase;
+export default Purchase

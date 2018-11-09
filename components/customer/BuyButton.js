@@ -1,20 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import StripeCheckout from 'react-stripe-checkout';
-import NProgress from 'nprogress';
+import React from 'react'
+import PropTypes from 'prop-types'
+import StripeCheckout from 'react-stripe-checkout'
+import NProgress from 'nprogress'
 
-import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button'
 
-import { buyBook } from '../../lib/api/customer';
-import notify from '../../lib/notifier';
-import env from '../../lib/env';
+import { buyBook } from '../../lib/api/customer'
+import notify from '../../lib/notifier'
+import env from '../../lib/env'
 
-const { StripePublishableKey } = env;
+const { StripePublishableKey } = env
 
 const styleBuyButton = {
   margin: '20px 20px 20px 0px',
   font: '14px Muli',
-};
+}
 
 class BuyButton extends React.Component {
   static propTypes = {
@@ -25,53 +25,53 @@ class BuyButton extends React.Component {
       _id: PropTypes.string.isRequired,
     }),
     showModal: PropTypes.bool,
-  };
+  }
 
   static defaultProps = {
     book: null,
     user: null,
     showModal: false,
-  };
+  }
 
   constructor(props) {
-    super(props);
+    super(props)
 
     this.state = {
       showModal: !!props.showModal,
-    };
+    }
   }
 
   onToken = async (token) => {
-    NProgress.start();
-    const { book } = this.props;
-    this.setState({ showModal: false });
+    NProgress.start()
+    const { book } = this.props
+    this.setState({ showModal: false })
 
     try {
-      await buyBook({ stripeToken: token, id: book._id });
-      notify('Success!');
-      window.location.reload(true);
-      NProgress.done();
+      await buyBook({ stripeToken: token, id: book._id })
+      notify('Success!')
+      window.location.reload(true)
+      NProgress.done()
     } catch (err) {
-      NProgress.done();
-      notify(err);
+      NProgress.done()
+      notify(err)
     }
-  };
+  }
 
   onLoginClicked = () => {
-    const { user } = this.props;
+    const { user } = this.props
 
     if (!user) {
-      const redirectUrl = `${window.location.pathname}?buy=1`;
-      window.location.href = `/auth/google?redirectUrl=${redirectUrl}`;
+      const redirectUrl = `${window.location.pathname}?buy=1`
+      window.location.href = `/auth/google?redirectUrl=${redirectUrl}`
     }
-  };
+  }
 
   render() {
-    const { book, user } = this.props;
-    const { showModal } = this.state;
+    const { book, user } = this.props
+    const { showModal } = this.state
 
     if (!book) {
-      return null;
+      return null
     }
 
     if (!user) {
@@ -87,7 +87,7 @@ class BuyButton extends React.Component {
             {book.price}
           </Button>
         </div>
-      );
+      )
     }
 
     return (
@@ -104,8 +104,8 @@ class BuyButton extends React.Component {
           {book.price}
         </Button>
       </StripeCheckout>
-    );
+    )
   }
 }
 
-export default BuyButton;
+export default BuyButton

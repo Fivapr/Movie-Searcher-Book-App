@@ -1,33 +1,33 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import Link from 'next/link';
-import Menu from '@material-ui/core/Menu';
-import Avatar from '@material-ui/core/Avatar';
+import React from 'react'
+import PropTypes from 'prop-types'
+import Link from 'next/link'
+import Menu from '@material-ui/core/Menu'
+import Avatar from '@material-ui/core/Avatar'
 
 class MenuDrop extends React.Component {
   static propTypes = {
     src: PropTypes.string.isRequired,
     alt: PropTypes.string.isRequired,
     options: PropTypes.arrayOf(String).isRequired,
-  };
+  }
 
   state = {
     open: false,
     anchorEl: undefined,
-  };
+  }
 
-  button = undefined;
+  button = undefined
 
   handleClick = (event) => {
-    this.setState({ open: true, anchorEl: event.currentTarget });
-  };
+    this.setState({ open: true, anchorEl: event.currentTarget })
+  }
 
   handleClose = () => {
-    this.setState({ open: false });
-  };
+    this.setState({ open: false })
+  }
 
   render() {
-    const { options, src, alt } = this.props;
+    const { options, src, alt } = this.props
 
     return (
       <div>
@@ -58,8 +58,8 @@ class MenuDrop extends React.Component {
           ))}
         </Menu>
       </div>
-    );
+    )
   }
 }
 
-export default MenuDrop;
+export default MenuDrop
