@@ -1,14 +1,14 @@
-import React from 'react';
-import JssProvider from 'react-jss/lib/JssProvider';
-import Document, { Head, Main, NextScript } from 'next/document';
-import htmlescape from 'htmlescape';
+import React from 'react'
+import JssProvider from 'react-jss/lib/JssProvider'
+import Document, { Head, Main, NextScript } from 'next/document'
+import htmlescape from 'htmlescape'
 
-import getContext from '../lib/context';
+import getContext from '../lib/context'
 
-const { StripePublishableKey } = process.env;
+const { StripePublishableKey } = process.env
 // console.log(StripePublishableKey);
 
-const env = { StripePublishableKey };
+const env = { StripePublishableKey }
 // console.log(env);
 
 class MyDocument extends Document {
@@ -36,8 +36,9 @@ class MyDocument extends Document {
           />
           <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            href="https://fonts.googleapis.com/css?family=Comfortaa:300,400&amp;subset=cyrillic"
           />
+          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
           <link
             rel="stylesheet"
             href="https://storage.googleapis.com/builderbook/nprogress.min.css"
@@ -79,7 +80,7 @@ class MyDocument extends Document {
         </Head>
         <body
           style={{
-            font: '16px Muli',
+            font: '16px Comfortaa',
             color: '#222',
             margin: '0px auto',
             fontWeight: '300',
@@ -94,12 +95,12 @@ class MyDocument extends Document {
           <NextScript />
         </body>
       </html>
-    );
+    )
   }
 }
 
 MyDocument.getInitialProps = ({ renderPage }) => {
-  const pageContext = getContext();
+  const pageContext = getContext()
   const page = renderPage(Component => props => (
     <JssProvider
       registry={pageContext.sheetsRegistry}
@@ -107,7 +108,7 @@ MyDocument.getInitialProps = ({ renderPage }) => {
     >
       <Component pageContext={pageContext} {...props} />
     </JssProvider>
-  ));
+  ))
 
   return {
     ...page,
@@ -121,7 +122,7 @@ MyDocument.getInitialProps = ({ renderPage }) => {
         }}
       />
     ),
-  };
-};
+  }
+}
 
-export default MyDocument;
+export default MyDocument
